@@ -47,7 +47,7 @@ function bfs(node) {
             3.如果是复杂数据类型，递归。
             4.考虑循环引用的问题
 */  
-function deepclone(obj,hash = new WeakMap) {
+function dfsDeepclone(obj,hash = new WeakMap) {
   // 如果是基本类型，直接返回
   if(obj !== null && typeof obj !== 'object') {
     return obj
@@ -59,12 +59,41 @@ function deepclone(obj,hash = new WeakMap) {
     return hash.get(obj)
   }
   let newObj = new obj.constructor() 
+  hash.set(obj, newObj)
   for(let key in obj) {
     if(obj.hasOwnProperty(key)) {
-      newObj[key] = deepclone(obj[key])
+      newObj[key] = dfsDeepclone(obj[key])
     }    
   }
   return newObj
+}
+
+function bfsDeepclone(obj, hash = new WeakMap){
+  let queue = []
+  let obj2 = {}
+  queue.push(obj)
+  while(queue.length) {
+    let item = queue.shift()
+      // 如果是基本类型，直接返回
+    if(item !== null && typeof item !== 'object') {
+      return item
+    }
+    if (item instanceof RegExp) return new RegExp(item)
+    if (item instanceof Date) return new Date(item)
+    // 处理循环引用
+    if(hash.has(item)) {
+      return hash.get(item)
+    }
+    let newObj = new item.constructor() 
+    hash.set(item, newObj)
+    for(let key in item) {
+      if(item[key] !== null && item[key] !== 'object') {
+        newObj[key] = item[key]
+      } else {
+        queue.push(item[key])
+      }
+    }
+  }
 }
 
 
