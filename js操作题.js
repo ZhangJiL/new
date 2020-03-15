@@ -67,7 +67,7 @@ function dfsDeepclone(obj,hash = new WeakMap) {
   }
   return newObj
 }
-
+// TODO 待实现
 function bfsDeepclone(obj, hash = new WeakMap){
   let queue = []
   let obj2 = {}
@@ -95,6 +95,40 @@ function bfsDeepclone(obj, hash = new WeakMap){
     }
   }
 }
+
+/* 3. 已知如下数组：
+      var arr = [ [1, 2, 2], [3, 4, 5, 5], [6, 7, 8, 9, [11, 12, [12, 13, [14] ] ] ], 10];
+      编写一个程序将数组扁平化去并除其中重复部分数据，最终得到一个升序且不重复的数组   
+*/
+const fn = (arr) => {
+  return [...new Set(arr.flat(Infinity))].sort((a,b) => a-b)
+}
+
+/* 4. 情人节福利题，如何实现一个 new
+    new 运算符创建一个用户定义的对象类型的实例或具有构造函数的内置对象的实例。new 关键字会进行如下的操作：
+      1.创建一个空的简单JavaScript对象（即{}）；
+      2.链接该对象（即设置该对象的构造函数）到另一个对象 ；
+      3.将步骤1新创建的对象作为this的上下文 ；
+      4.如果该函数没有返回对象，则返回this。
+*/
+const _new = () => {
+  let instance = {}
+  const [constructor, ...args] = [...arguments]
+  instance.__proto__ = constructor.prototype
+  const result = constructor.apply(instance, args)
+  if ( result !== null && (typeof result === 'object' || typeof result === 'function')) {
+    return result
+  }
+  return instance  
+}
+// 更简单的一个实现
+function _new(fn, ...arg) {
+    const obj = Object.create(fn.prototype);
+    const ret = fn.apply(obj, arg);
+    return ret instanceof Object ? ret : obj;
+}
+
+
 
 
 
