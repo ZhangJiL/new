@@ -33,7 +33,7 @@ function bfs(node) {
       浅拷贝是会将对象的每个属性进行依次复制，但是当对象的属性值是引用类型时，实质复制的是其引用，当引用指向的值改变时也会跟着变化。
   深拷贝：
       深拷贝复制变量值，对于非基本类型的变量，则递归至基本类型变量后，再复制。深拷贝后的对象与原来的对象是完全隔离的，互不影响，对一个对象的修改并不会影响另一个对象。
-  深拷贝的实现：  
+  深拷贝的实现：
       1.深拷贝最简单的实现是: JSON.parse(JSON.stringify(obj))
       问题：  1.对象的属性值是函数时，无法拷贝。
              2.原型链上的属性无法拷贝
@@ -46,7 +46,7 @@ function bfs(node) {
             2.如果是 RegExp 或者 Date 类型，返回对应类型
             3.如果是复杂数据类型，递归。
             4.考虑循环引用的问题
-*/  
+*/
 function dfsDeepclone(obj,hash = new WeakMap) {
   // 如果是基本类型，直接返回
   if(obj !== null && typeof obj !== 'object') {
@@ -58,12 +58,12 @@ function dfsDeepclone(obj,hash = new WeakMap) {
   if(hash.has(obj)) {
     return hash.get(obj)
   }
-  let newObj = new obj.constructor() 
+  let newObj = new obj.constructor()
   hash.set(obj, newObj)
   for(let key in obj) {
     if(obj.hasOwnProperty(key)) {
       newObj[key] = dfsDeepclone(obj[key])
-    }    
+    }
   }
   return newObj
 }
@@ -84,7 +84,7 @@ function bfsDeepclone(obj, hash = new WeakMap){
     if(hash.has(item)) {
       return hash.get(item)
     }
-    let newObj = new item.constructor() 
+    let newObj = new item.constructor()
     hash.set(item, newObj)
     for(let key in item) {
       if(item[key] !== null && item[key] !== 'object') {
@@ -98,7 +98,7 @@ function bfsDeepclone(obj, hash = new WeakMap){
 
 /* 3. 已知如下数组：
       var arr = [ [1, 2, 2], [3, 4, 5, 5], [6, 7, 8, 9, [11, 12, [12, 13, [14] ] ] ], 10];
-      编写一个程序将数组扁平化去并除其中重复部分数据，最终得到一个升序且不重复的数组   
+      编写一个程序将数组扁平化去并除其中重复部分数据，最终得到一个升序且不重复的数组
 */
 const fn = (arr) => {
   return [...new Set(arr.flat(Infinity))].sort((a,b) => a-b)
@@ -119,7 +119,7 @@ const _new = () => {
   if ( result !== null && (typeof result === 'object' || typeof result === 'function')) {
     return result
   }
-  return instance  
+  return instance
 }
 // 更简单的一个实现
 function _new(fn, ...arg) {
@@ -128,6 +128,15 @@ function _new(fn, ...arg) {
     return ret instanceof Object ? ret : obj;
 }
 
+//  请把两个数组 ['A1', 'A2', 'B1', 'B2', 'C1', 'C2', 'D1', 'D2'] 和 ['A', 'B', 'C', 'D']，合并为 ['A1', 'A2', 'A', 'B1', 'B2', 'B', 'C1', 'C2', 'C', 'D1', 'D2', 'D']。
+const arr1 = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2', 'D1', 'D2']
+const arr2 = ['A', 'B', 'C', 'D'].map(item => item + 3)
+const arr3 = [...arr1,...arr2].sort().map(item => {
+  if(item.includes('3')) {
+    return item.split('')[0]
+  }
+  return item
+})
 
 
 

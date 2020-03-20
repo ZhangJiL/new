@@ -19,4 +19,17 @@ ES5 的继承，实质是先创造子类的实例对象`this`，然后再将父�
 
 #### 3. 介绍下重绘和回流（Repaint & Reflow），以及如何进行优化
 ##### 从输入URL到页面展示，这中间发生了什么？
-！[](./img/url.png)
+![图片](https://github.com/ZhangJiL/new/blob/master/img/url.png)
+[参考链接](https://time.geekbang.org/column/article/117637)
+
+##### HTML、CSS和JavaScript，是如何变成页面的？
+[上](https://time.geekbang.org/column/article/118205)
+[下](https://time.geekbang.org/column/article/118826)
+
+
+#### 4. 全局作用域中，用 const 和 let 声明的变量不在 window 上，那到底在哪里？如何去获取？。
+在ES5中，顶层对象的属性和全局变量是等价的，var 命令和 function 命令声明的全局变量，自然也是顶层对象。
+
+  但ES6规定，var 命令和 function 命令声明的全局变量，依旧是顶层对象的属性，但 let命令、const命令、class命令声明的全局变量，不属于顶层对象的属性。
+
+在定义变量的块级作用域中就能获取
