@@ -128,7 +128,7 @@ function _new(fn, ...arg) {
     return ret instanceof Object ? ret : obj;
 }
 
-//  请把两个数组 ['A1', 'A2', 'B1', 'B2', 'C1', 'C2', 'D1', 'D2'] 和 ['A', 'B', 'C', 'D']，合并为 ['A1', 'A2', 'A', 'B1', 'B2', 'B', 'C1', 'C2', 'C', 'D1', 'D2', 'D']。
+//  5. 请把两个数组 ['A1', 'A2', 'B1', 'B2', 'C1', 'C2', 'D1', 'D2'] 和 ['A', 'B', 'C', 'D']，合并为 ['A1', 'A2', 'A', 'B1', 'B2', 'B', 'C1', 'C2', 'C', 'D1', 'D2', 'D']。
 const arr1 = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2', 'D1', 'D2']
 const arr2 = ['A', 'B', 'C', 'D'].map(item => item + 3)
 const arr3 = [...arr1,...arr2].sort().map(item => {
@@ -138,21 +138,67 @@ const arr3 = [...arr1,...arr2].sort().map(item => {
   return item
 })
 
+// 6.下面的代码打印什么内容，为什么？
+var b = 10;
+(function b(){
+    b = 20;
+    console.log(b);
+})();
+// 打印结果： 在非匿名自执行函数中，函数变量为只读状态无法修改
+/*ƒ b() {
+b = 20;
+console.log(b)
+}*/
+
+// 7.使用迭代的方式实现 flatten 函数。
+let arr = [1, 2, [3, 4, 5, [6, 7], 8], 9, 10, [11, [12, 13]]]
+// 方式一
+function flatten(arr) {
+  while(arr.some(item => Array.isArray(item))) {
+    arr = [].concat(...arr)
+  }
+  return arr
+}
+// 方式二
+function flatten(arr) {
+  return arr.reduce((acc,cur) => {
+    if(Array.isArray(cur)) {
+      acc.concat(flatten(cur))
+    } else {
+      acc.concat(cur)
+    }
+  }, [])
+}
 
 
+/* 8 a 怎样取值，使 a == 1 && a == 2 && a == 3 为真
+    考察的使对象的类型转换，对象的 ToPrimitive 转换的规则如下：
+      1 obj[Symbol.toPrimitive](hint) , hint 值为 'string', 'number', 'default'，表示期望得到的基本类型 。函数返回一个基本类型的值；
+      2 如果函数不存在，hint 值为 'string' , 会先调用 obj.toSting() 方法，如果返回的不是基本类型值，继续尝试调用 obj.valueOf() 方法；
+      3 如果函数不存在，hint 值不是 'string' ，会先调用 obj.valueOf() 方法，如果返回的不是基本类型值，继续尝试调用 obj.toSting() 方法；
+      如果返回的都不是基本类型，会报错:  Uncaught TypeError: Cannot convert object to primitive value
+    当我们创建一个普通对象时（{} 或 new Object() 的方式等），对象上是不具备 [Symbol.toPrimitive] （方法）属性的。
+    默认情况下，一个普通的对象 toString() 方法返回 "[object Object]"；
+    valueOf() 方法返回对象本身。（会被忽略掉）
+    数组默认的 toString()  方法经过了重新定义，将所有单元字符串化以后再用 ',' 连接起来。
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+*/
+// 方式一
+let a = {
+  i: 1,
+  toString () {
+    return a.i++
+  }
+}
+// 方式二
+let a = {
+  i: 1,
+  valueOf () {
+    return a.i++
+  }
+}
+// 方式三
+let a = {[Symbol.toPrimitive]: ((i) => () => ++i) (0)};
+//方式四，利用数组默认的 toString 方法
+var a = [1,2,3];
+a.join = a.shift;
